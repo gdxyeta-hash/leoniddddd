@@ -1,0 +1,279 @@
+<!DOCTYPE html> 
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+ <title ЛЕОНИД БУЭЭХЭЭ></title>
+</head>
+<style>
+   body {
+        margin: 0;
+        overflow: hidden;
+        min-height: 100vh;
+        position: relative;
+       
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-family: Arial, sans-serif;
+    }
+    
+  
+   
+    
+    /* Картинка ЛЕОНИДА */
+    .leonid-img {
+        width: 500px;
+        height: 500px;
+        object-fit: cover;
+        margin: 20px 0;
+        box-shadow: 0 0 30px blueviolet;
+        transition: transform 0.3s;
+    }
+    
+    /* Вращение картинки */
+    .spin-active {
+        animation: spin 3s linear infinite;
+    }
+    
+    @keyframes spin {
+        100% { transform: rotate(360deg); }
+    }
+    
+    /* Кнопка */
+    .leonid-button {
+        background: linear-gradient(45deg, blueviolet, #ff00ff);
+        color: white;
+        border: none;
+        padding: 20px 50px;
+        font-size: 24px;
+        font-weight: bold;
+        border-radius: 50px;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: all 0.3s;
+        box-shadow: 0 5px 25px rgba(138, 43, 226, 0.7);
+    }
+    
+    .leonid-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 30px rgba(138, 43, 226, 1);
+    }
+    
+    .leonid-button:active {
+        transform: scale(0.95);
+    }
+    
+    /* Летающие картинки на фоне */
+    .flying-image {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 1;
+        border-radius: 10px;
+        object-fit: cover;
+    }
+    
+    h1 {
+        color: white;
+        font-size: 3em;
+        text-shadow: 0 0 10px blueviolet, 
+                     0 0 20px blueviolet;
+        margin: 0;
+    }
+    
+    .status {
+        margin-top: 15px;
+        font-size: 18px;
+        color: #aaa;
+    }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>ЛЕОНИД КРУТОЙ</h1>
+        
+        <img src="sigma/kartinki/leonid.jpg" alt="ЛЕОНИД" id="leonid-img" class="leonid-img">
+        
+        <div class="status" id="status"></div>
+        
+        <button class="leonid-button" id="leonid-button">
+          СОСАТЬ ХУЙ
+        </button>
+    </div>
+    
+    <audio id="leonid-music" src="sigma/music/абщхда).mp3"></audio>
+    
+    <script>
+    const music = document.getElementById('leonid-music');
+    const img = document.getElementById('leonid-img');
+    const button = document.getElementById('leonid-button');
+    const statusText = document.getElementById('status');
+    let isActive = false;
+    
+
+    
+    // Массив с реальными путями к картинкам (если есть)
+    const imagePaths = [
+        'sigma/kartinki/fon1.jpg',
+       'sigma/kartinki/fon2.jpg',
+        
+    ];
+    
+    function startLeonidShow() {
+        if (isActive) return;
+        isActive = true;
+        
+        // Включаем музыку
+        music.play();
+        
+        // Запускаем вращение картинки
+        img.classList.add('spin-active');
+        
+        // Меняем кнопку
+        button.innerHTML = "ЛЕОНИД СОСЕТ ХУЙ";
+        button.style.background = "linear-gradient(45deg, #ff0000, #ff6600)";
+        statusText.innerHTML = "";
+        statusText.style.color = "#00ff00";
+        
+        // Запускаем летающие картинки
+        startFlyingImages();
+        
+        // Меняем действие кнопки на остановку
+        button.onclick = stopLeonidShow;
+    }
+    
+    function stopLeonidShow() {
+        isActive = false;
+        
+        // Останавливаем музыку
+        music.pause();
+        music.currentTime = 0;
+        
+        // Останавливаем вращение
+        img.classList.remove('spin-active');
+        
+        // Возвращаем кнопку
+        button.innerHTML = "ЕЩЕ РАЗ СОСНУТЬ ХУЙ";
+        button.style.background = "linear-gradient(45deg, blueviolet, #ff00ff)";
+        statusText.innerHTML = "";
+        statusText.style.color = "#aaa";
+        
+        // Убираем все летающие картинки
+        document.querySelectorAll('.flying-image').forEach(el => el.remove());
+        
+        // Возвращаем действие кнопки
+        button.onclick = startLeonidShow;
+    }
+    
+    function startFlyingImages() {
+        // Создаем летающие картинки каждые 300ms
+        const interval = setInterval(() => {
+            if (!isActive) {
+                clearInterval(interval);
+                return;
+            }
+            
+            createFlyingImage();
+        }, 300);
+        
+        // Автоочистка через 10 секунд (для производительности)
+        setTimeout(() => {
+            if (isActive) {
+                document.querySelectorAll('.flying-image').forEach((el, index) => {
+                    if (index > 30) el.remove();
+                });
+            }
+        }, 10000);
+    }
+    
+    function createFlyingImage() {
+        const flyingImg = document.createElement('div');
+        flyingImg.className = 'flying-image';
+        
+        // Используем эмодзи или картинки
+        if (Math.random() > 0.5 && imagePaths.length > 0) {
+            // Если есть реальные картинки
+            const imgElement = document.createElement('img');
+            imgElement.src = imagePaths[Math.floor(Math.random() * imagePaths.length)];
+            imgElement.style.width = '100%';
+            imgElement.style.height = '100%';
+            flyingImg.appendChild(imgElement);
+        } else {
+            // Используем эмодзи
+            flyingImg.innerHTML = flyingImages[Math.floor(Math.random() * flyingImages.length)];
+            flyingImg.style.fontSize = '100px';
+            flyingImg.style.textAlign = 'center';
+            flyingImg.style.lineHeight = '50px';
+        }
+        
+        // Случайная позиция старта
+        const startX = Math.random() * window.innerWidth;
+        const startY = window.innerHeight + 100;
+        
+        // Случайная позиция финиша
+        const endX = Math.random() * window.innerWidth;
+        const endY = -100;
+        
+        // Случайный размер
+        const size = 100 + Math.random() * 60;
+        flyingImg.style.width = size + 'px';
+        flyingImg.style.height = size + 'px';
+        
+        // Случайная скорость
+        const duration = 3 + Math.random() * 7;
+        
+        // Позиционируем
+        flyingImg.style.left = startX + 'px';
+        flyingImg.style.top = startY + 'px';
+        
+        // Случайный цвет для эмодзи
+        if (!flyingImg.querySelector('img')) {
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+            flyingImg.style.color = colors[Math.floor(Math.random() * colors.length)];
+        }
+        
+        document.body.appendChild(flyingImg);
+        
+        // Анимация полета
+        flyingImg.animate([
+            {
+                opacity: 0,
+                transform: 'translate(0, 0) rotate(0deg)'
+            },
+            {
+                opacity: 0.8,
+                offset: 0.1
+            },
+            {
+                opacity: 0.8,
+                offset: 0.9
+            },
+            {
+                opacity: 0,
+                transform: `translate(${endX - startX}px, ${endY - startY}px) rotate(360deg)`
+            }
+        ], {
+            duration: duration * 1000,
+            easing: 'cubic-bezier(0.2, 0.8, 0.8, 0.2)'
+        });
+        
+        // Удаляем элемент после анимации
+        setTimeout(() => {
+            if (flyingImg.parentNode) {
+                flyingImg.remove();
+            }
+        }, duration * 1000);
+    }
+    
+    // Назначаем кнопке начальную функцию
+    button.onclick = startLeonidShow;
+    
+    // Автозапуск при клике по странице (если нужно)
+    // document.addEventListener('click', startLeonidShow, { once: true });
+    </script>
+</body>
+</html>
